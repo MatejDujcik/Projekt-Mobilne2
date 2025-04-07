@@ -2,3 +2,4 @@
 Križovatky pána Olé, Tarra, Kalníka a Dujčíka.
 Matej ma maly pipik
 
+boze moj

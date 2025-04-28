@@ -1,7 +1,7 @@
 import sqlite3
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from urllib.parse import urlparse, unquote
+from urllib.parse import urlparse
 
 def create_db():
     conn = sqlite3.connect('pocasie.db')
@@ -21,19 +21,20 @@ def create_db():
 def get_all_mesta():
     conn = sqlite3.connect('pocasie.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT nazov, sila_vetra, mm_zrazky, teplota FROM mesta')
+    cursor.execute('SELECT id, nazov FROM mesta')
     rows = cursor.fetchall()
     conn.close()
-    return [{'nazov': row[0], 'sila_vetra': row[1], 'mm_zrazky': row[2], 'teplota': row[3]} for row in rows]
+    return [{'id': row[0], 'nazov': row[1]} for row in rows]
 
-def get_mesto_by_name(nazov):
+
+def get_mesto_by_id(id):
     conn = sqlite3.connect('pocasie.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT nazov, sila_vetra, mm_zrazky, teplota FROM mesta WHERE nazov = ?', (nazov,))
+    cursor.execute('SELECT id, nazov, sila_vetra, mm_zrazky, teplota FROM mesta WHERE id = ?', (id,))
     row = cursor.fetchone()
     conn.close()
     if row:
-        return {'nazov': row[0], 'sila_vetra': row[1], 'mm_zrazky': row[2], 'teplota': row[3]}
+        return {'id': row[0], 'nazov': row[1], 'sila_vetra': row[2], 'mm_zrazky': row[3], 'teplota': row[4]}
     else:
         return None
 
@@ -47,23 +48,23 @@ def insert_mesto(nazov, sila_vetra, mm_zrazky, teplota):
     conn.commit()
     conn.close()
 
-def update_mesto(nazov, sila_vetra, mm_zrazky, teplota):
+def update_mesto(id, sila_vetra, mm_zrazky, teplota):
     conn = sqlite3.connect('pocasie.db')
     cursor = conn.cursor()
     cursor.execute('''
         UPDATE mesta
         SET sila_vetra = ?, mm_zrazky = ?, teplota = ?
-        WHERE nazov = ?
-    ''', (sila_vetra, mm_zrazky, teplota, nazov))
+        WHERE id = ?
+    ''', (sila_vetra, mm_zrazky, teplota, id))
     updated = cursor.rowcount
     conn.commit()
     conn.close()
     return updated > 0
 
-def delete_mesto(nazov):
+def delete_mesto(id):
     conn = sqlite3.connect('pocasie.db')
     cursor = conn.cursor()
-    cursor.execute('DELETE FROM mesta WHERE nazov = ?', (nazov,))
+    cursor.execute('DELETE FROM mesta WHERE id = ?', (id,))
     deleted = cursor.rowcount
     conn.commit()
     conn.close()
@@ -76,8 +77,11 @@ class MyHandler(BaseHTTPRequestHandler):
             mesta = get_all_mesta()
             self.respond_json(200, mesta)
         elif parsed_path.path.startswith('/api/mesto/'):
-            nazov = unquote(parsed_path.path.split('/api/mesto/')[1])
-            mesto = get_mesto_by_name(nazov)
+            id_str = parsed_path.path.split('/api/mesto/')[1]
+            if not id_str.isdigit():
+                self.respond_json(400, {'error': 'Neplatne ID'})
+                return
+            mesto = get_mesto_by_id(int(id_str))
             if mesto:
                 self.respond_json(200, mesto)
             else:
@@ -101,12 +105,15 @@ class MyHandler(BaseHTTPRequestHandler):
 
     def do_PUT(self):
         if self.path.startswith('/api/mesto/'):
-            nazov = unquote(self.path.split('/api/mesto/')[1])
+            id_str = self.path.split('/api/mesto/')[1]
+            if not id_str.isdigit():
+                self.respond_json(400, {'error': 'Neplatne ID'})
+                return
             data = self.read_json()
             if not all(key in data for key in ['sila_vetra', 'mm_zrazky', 'teplota']):
                 self.respond_json(400, {'error': 'Chyba udajov'})
                 return
-            success = update_mesto(nazov, data['sila_vetra'], data['mm_zrazky'], data['teplota'])
+            success = update_mesto(int(id_str), data['sila_vetra'], data['mm_zrazky'], data['teplota'])
             if success:
                 self.respond_json(200, {'message': 'Mesto aktualizovane'})
             else:
@@ -116,8 +123,11 @@ class MyHandler(BaseHTTPRequestHandler):
 
     def do_DELETE(self):
         if self.path.startswith('/api/mesto/'):
-            nazov = unquote(self.path.split('/api/mesto/')[1])
-            success = delete_mesto(nazov)
+            id_str = self.path.split('/api/mesto/')[1]
+            if not id_str.isdigit():
+                self.respond_json(400, {'error': 'Neplatne ID'})
+                return
+            success = delete_mesto(int(id_str))
             if success:
                 self.respond_json(200, {'message': 'Mesto vymazane'})
             else:

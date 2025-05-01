@@ -3,6 +3,7 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 
+
 def create_db():
     conn = sqlite3.connect('pocasie.db')
     cursor = conn.cursor()
@@ -71,6 +72,13 @@ def delete_mesto(id):
     return deleted > 0
 
 class MyHandler(BaseHTTPRequestHandler):
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.end_headers()
+
     def do_GET(self):
         parsed_path = urlparse(self.path)
         if parsed_path.path == '/api/mesta':
@@ -139,9 +147,15 @@ class MyHandler(BaseHTTPRequestHandler):
         content_length = int(self.headers.get('Content-Length', 0))
         body = self.rfile.read(content_length)
         return json.loads(body)
+    
+    def send_cors_headers(self):
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
 
     def respond_json(self, code, data):
         self.send_response(code)
+        self.send_cors_headers()
         self.send_header('Content-Type', 'application/json')
         self.end_headers()
         self.wfile.write(json.dumps(data).encode())

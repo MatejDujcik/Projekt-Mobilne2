@@ -1,0 +1,108 @@
+body {
+    background-color: #f0f8ff;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  
+  .container-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+  }
+  
+  .card-title {
+    font-size: 2rem;
+    color: #007bff;
+  }
+  
+  .card p {
+    font-size: 1.2rem;
+  }
+  .city-card {
+    width: 55rem;
+    height: 25rem;
+  }
+  .city-cards-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-5px);
+  }
+  
+  h1.display-5 {
+    animation: fadeIn 2s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    border: none;
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+    border: none;
+  }
+  
+  .btn-primary:hover,
+  .btn-secondary:hover {
+    background-color: #0056b3;
+  }
+  .weather-bg {
+    width: 100%;
+    height: 400px;
+    background-size: cover;
+  }
+  
+  #weather-animation {
+    width: 100%;
+    height: 400px;
+    background-size: cover;
+  }
+
+  @media (max-width: 767px) {
+    .card-columns {
+      display: block;
+    }
+  }
+  
+  

@@ -1,7 +1,8 @@
-body {
-    background-color: #f0f8ff;
-    font-family: 'Arial', sans-serif;
+body.bg-light {
+    background-color: #73ccf2d2 !important;
+    border: 10px solid #73ccf2db;
   }
+  
   
   
   .container-center {
@@ -26,28 +27,35 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    background-color: #fff;
+    background-color: #ffffff;
+    background-image: url('animations/bg.jpg');
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
   }
   
   .card-title {
-    font-size: 2rem;
-    color: #007bff;
+    font-size: 3rem;
+    color: #ffffff;
+    word-wrap: break-word;  
+    white-space: normal;
+    overflow-wrap: break-word;
   }
   
   .card p {
     font-size: 1.2rem;
   }
   .city-card {
-    width: 55rem;
-    height: 25rem;
+    width: 300%;
+    max-width: 500px; 
+    height: auto;    
+    margin-bottom: 1rem;
   }
   .city-cards-container {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    gap: 1rem;
   }
   .btn {
     transition: background-color 0.3s ease, transform 0.2s ease;
@@ -104,5 +112,3 @@ body {
       display: block;
     }
   }
-  
-  

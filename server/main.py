@@ -7,7 +7,6 @@ import uvicorn
 
 app = FastAPI(title="Pocasie API", description="API pre spravu pocasia v mestach", version="1.0.0")
 
-# CORS configuration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -16,7 +15,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Pydantic models for request/response validation
 class MestoCreate(BaseModel):
     nazov: str
     sila_vetra: float

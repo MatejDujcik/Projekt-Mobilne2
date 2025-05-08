@@ -8,10 +8,8 @@ import os
 @pytest.fixture
 def client():
     """Create a test client with an in-memory database."""
-    # Create a fresh in-memory database for each test
     create_db()
     yield TestClient(app)
-    # Clean up database file if it exists
     if os.path.exists('pocasie.db'):
         os.remove('pocasie.db')
 
@@ -103,7 +101,6 @@ def test_update_mesto(client, setup_test_data):
     assert response.status_code == 200
     assert response.json() == {"message": "Mesto aktualizovane"}
 
-    # Verify update
     response = client.get("/api/mesto/1")
     assert response.json()["sila_vetra"] == 6.0
     assert response.json()["mm_zrazky"] == 3.0
@@ -128,7 +125,6 @@ def test_delete_mesto(client, setup_test_data):
     assert response.status_code == 200
     assert response.json() == {"message": "Mesto vymazane"}
 
-    # Verify deletion
     response = client.get("/api/mesto/1")
     assert response.status_code == 404
 

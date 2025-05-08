@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:3000/api";
+const API_BASE = "http://localhost:9013/api";
 
 document.addEventListener("DOMContentLoaded", loadCities);
 
@@ -11,7 +11,7 @@ function loadCities() {
       container.innerHTML = ""; 
       data.forEach(mesto => {
         const card = document.createElement("div");
-        card.className = "col-md-4 mb-4 d-flex justify-content-center"; 
+        card.className = "mb-4 d-flex justify-content-center";
         card.innerHTML = `
           <div class="card shadow-sm city-card text-center">
             <div class="card-body">
